@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+
+members = [
+  "cache",
+  "seive_cache"
+]
+
+
+[workspace.dependencies]
+cache = { path = "cache" }
+seive_cache = { path = "seive_cache" }
+
+clap = { version="4.5", features=["derive"] }
+env_logger = { version="0.11" }
