@@ -6,4 +6,6 @@ where
     fn get(&self, key: &Key) -> Option<&Value>;
 
     fn set(&mut self, key: Key, value: Value);
+
+    fn cache(&self) -> Vec<(Key, Value)>;
 }

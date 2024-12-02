@@ -42,16 +42,6 @@ where
 
         self.seive_list[self.hand] = Some(key);
     }
-
-    pub fn cache(&self) -> Vec<(Key, Value)> {
-        let mut result = Vec::<(Key, Value)>::with_capacity(self.cache.len());
-
-        for (k, v) in &self.cache {
-            result.push((k.clone(), v.value().clone()));
-        }
-
-        result
-    }
 }
 
 impl<Key, Value> SizeLimitedCache<Key, Value>  for  SeiveCache<Key, Value> 
@@ -75,4 +65,15 @@ where
         self.add_key_to_seive(key.clone());
         self.cache.insert(key, value_node);
     }
+
+    fn cache(&self) -> Vec<(Key, Value)> {
+        let mut result = Vec::<(Key, Value)>::with_capacity(self.cache.len());
+
+        for (k, v) in &self.cache {
+            result.push((k.clone(), v.value().clone()));
+        }
+
+        result
+    }
+    
 }

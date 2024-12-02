@@ -1,4 +1,4 @@
-use std::sync::{Mutex, RwLock};
+use std::{ops::{Deref, DerefMut}, sync::{Mutex, RwLock}};
 
 use crate::cache_trait::SizeLimitedCache;
 
@@ -10,6 +10,8 @@ where
      fn get(&self, key: &Key) -> Option<Value>;
 
      fn set(&self, key: Key, value: Value);
+
+     fn cache(&self) -> Vec<(Key, Value)>;
 }
 
 
@@ -21,7 +23,7 @@ pub struct LockBasedShareableCache<Cache> {
     cache: RwLock<Cache>
 }
 
-fn synchronized_cache<Cache, Key, Value>(cache: Cache) -> SynchronizedShareableCache<Cache> 
+pub fn synchronized_cache<Cache, Key, Value>(cache: Cache) -> SynchronizedShareableCache<Cache> 
 where
     Key: Eq + std::hash::Hash + Clone,
     Value: Clone,
@@ -31,7 +33,7 @@ where
 }
 
 
-fn locked_cache<Cache, Key, Value>(cache: Cache) -> LockBasedShareableCache<Cache> 
+pub fn locked_cache<Cache, Key, Value>(cache: Cache) -> LockBasedShareableCache<Cache> 
 where
     Key: Eq + std::hash::Hash,
     Value: Clone,
@@ -60,6 +62,11 @@ where
             lock.set(key, value);
         }
     }
+
+    fn cache(&self) -> Vec<(Key, Value)> {
+        let cache = self.cache.lock().unwrap();
+        cache.cache().to_vec()
+    }
 }
 
 impl<Key, Value, Cache> ShareableCache<Key, Value> for LockBasedShareableCache<Cache> 
@@ -82,4 +89,10 @@ where
             lock.set(key, value);
         }
     }
+
+    fn cache(&self) -> Vec<(Key, Value)> {
+        let cache = self.cache.read().unwrap();
+        cache.cache().to_vec()
+    }
+    
 }
