@@ -18,11 +18,11 @@ fn should_evict_in_fifo_order() {
     assert_eq!(cache.cache().len(), capacity);
 
     for i in 0..excess {
-        assert_eq!(cache.get(&i).is_none(), true);
+        assert!(cache.get(&i).is_none());
     }
 
     for i in excess..excess+capacity {
-        assert_eq!(cache.get(&i).is_some(), true);    
+        assert!(cache.get(&i).is_some());    
     }
 }
 
@@ -44,19 +44,19 @@ fn should_evict_the_unread_keys_in_fifo_order() {
 
     for i in 0..capacity+excess {
         if i % 2 == 0 {
-            assert_eq!(cache.get(&i).is_some(), true);
+            assert!(cache.get(&i).is_some());
         }
     }
 
     for i in 0..2*excess {
         if i % 2 == 1 {
-            assert_eq!(cache.get(&i).is_none(), true);
+            assert!(cache.get(&i).is_none());
         }
     }
 
     for i in 2*excess..capacity {
         if i % 2 == 1 {
-            assert_eq!(cache.get(&i).is_some(), true);
+            assert!(cache.get(&i).is_some());
         }
     }    
 }
